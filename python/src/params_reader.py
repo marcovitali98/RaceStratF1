@@ -8,39 +8,55 @@ from loguru import logger
 
 
 class CircuitInfo():
-    def get_circuit_info_from_file(self, file_path, circuit_name):
+
+    def __init__(self, file_path: str, logger: logger):
+        self.data = None
+        self.file_path = file_path
+        self.logger = logger
+        self.circuit_info = None
+        self.get_file()
+    
+
+    def get_file(self):
         try:
-            with open(file_path, 'r') as file:
-                data = json.load(file)
-                circuit_info = data.get(circuit_name, "Circuit not found")
-                return circuit_info
+            with open(self.file_path, 'r') as file:
+                self.data = json.load(file)
         except FileNotFoundError:
             return "File not found"
         except json.JSONDecodeError:
             return "Error decoding JSON"
         except Exception as e:
             return str(e)
+        
     
-    # show the available circuits to the user
-    def show_available_circuits(self, file_path: str):
+    def get_circuit_info(self):
+        return self.circuit_info
+    
+    def get_available_circuits(self):
         try:
-            with open(file_path, "r") as file:
-                data = json.load(file)
-                circuits = list(data.keys())
-                return circuits
-        except FileNotFoundError:
-            return "File not found"
-        except json.JSONDecodeError:
-            return "Error decoding JSON"
+            circuits = list(self.data.keys())
+            return circuits
         except Exception as e:
             return str(e)
-    
+
+
+    def get_circuit_info(self, circuit_name):
+        try:
+            self.circuit_info = self.data[circuit_name]
+            return self.circuit_info
+        except Exception as e:
+            return str(e)
+       
+
     def user_input(self):
-        logger.info(f"Available circuits: {self.show_available_circuits(file_path)}")
+
+        # show the available circuits to the user
+        for circuit in self.get_available_circuits():
+            self.logger.info(circuit)
 
         # get the circuit name from the user
         circuit_name = input("Enter the circuit name: ")
 
         # Usage
-        circuit_info = self.get_circuit_info_from_file(file_path, circuit_name)
+        circuit_info = self.get_circuit_info(circuit_name)
         return circuit_info
