@@ -25,7 +25,7 @@ class CircuitInfo():
         except json.JSONDecodeError:
             return "Error decoding JSON"
         except Exception as e:
-            return str(e)
+            return logger.exception(e)
         
     
     def get_circuit_info(self):
@@ -33,10 +33,11 @@ class CircuitInfo():
     
     def get_available_circuits(self):
         try:
-            circuits = list(self.data.keys())
+            # retrunt the available circuits, field circuit_name
+            circuits = list(self.data.circuits["circuit_name"])
             return circuits
         except Exception as e:
-            return str(e)
+            return logger.exception(e)
 
 
     def get_circuit_info(self, circuit_name):
@@ -45,7 +46,6 @@ class CircuitInfo():
             return self.circuit_info
         except Exception as e:
             return str(e)
-       
 
     def user_input(self):
 
