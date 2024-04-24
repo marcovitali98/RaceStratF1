@@ -14,6 +14,8 @@ Ensure Python 3.x and Make are installed on your system. Check with:
     python3 --version
     make --version
 
+Go to path '/python' to run the following commands.
+
 ### Commands
 
 - **Setup**: Create the virtual environment, activate it, and install dependencies from `requirements.txt`.

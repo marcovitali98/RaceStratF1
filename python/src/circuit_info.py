@@ -27,9 +27,8 @@ class CircuitInfo():
         
     def get_available_circuits(self):
         try:
-            # retrunt the available circuits, field circuit_name
+            # return the available circuits, field circuit_name
             circuits = self.data.keys()
-            print(circuits)
             return circuits
         except Exception as e:
             return logger.exception(e)

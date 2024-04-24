@@ -1,10 +1,10 @@
 from circuit_info import CircuitInfo
-import strategy
+from strategy import Strategy
 
 
 from loguru import logger
 
-CIRCUIT_FILE_PATH = '../circuit.json'
+CIRCUIT_FILE_PATH = "../circuit.json"
 
 
 def main():
@@ -14,22 +14,21 @@ def main():
         logger=logger)
     param = circuit_info.user_input()
 
-    logger.info(f"Selected circuit: {param['circuit_name']}")
-    logger.info(f"Number of laps: {param['n_lap_tot']}")
-    logger.info(f"Number of iterations: {param['n_iter']}")
-    logger.info(f"Number of pit stops: {param['n_stop']}")
-    logger.info(f"Number of stops: {param['n_stop']}")
-    logger.info(f"Average pit stop time: {param['t_stop_0']}")
-    logger.info(f"Average time loss per kg of fuel: {param['t_fuel']}s")
+    logger.info(f"Selected circuit: {param["circuit_name"]}")
+    logger.info(f"Number of laps: {param["n_lap_tot"]}")
+    logger.info(f"Number of iterations: {param["n_iter"]}")
+    logger.info(f"Number of pit stops: {param["n_stop"]}")
+    logger.info(f"Number of stops: {param["n_stop"]}")
+    logger.info(f"Average pit stop time: {param["t_stop_0"]}")
+    logger.info(f"Average time loss per kg of fuel: {param["t_fuel"]}s")
 
-
-    st = strategy.Strategy(param["circuit_name"])
-    st.set_params(param)
+    strategy_1 = Strategy(param["circuit_name"])
+    strategy_1.set_params(param)
 
     if param["n_stop"] == 1:
-        st.one_stop_strategy(param)
+        strategy_1.one_stop_strategy(param)
     elif param["n_stop"] == 2:
-        st.two_stop_strategy()
+        strategy_1.two_stop_strategy()
 
 
 if __name__ == "__main__":
