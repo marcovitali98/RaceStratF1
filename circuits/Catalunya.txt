@@ -1,15 +1,17 @@
-lap_best_soft 75
-lap_best_medium 76
-lap_best_hard 76.5
-t_fuel 0.035
-fuel_con 2
-tyre_degrad_coeff_soft 0.5
-tyre_degrad_coeff_medium 0.25
-tyre_degrad_coeff_hard 0.1
-tyre_opt_lap_soft 10
-tyre_opt_lap_medium 15
-tyre_opt_lap_hard 20
-t_stop_0 22.5
-n_lap_tot 66
-n_stop 2
-n_iter 1600
+{
+    "lap_best_soft": 75
+    "lap_best_medium": 76
+    "lap_best_hard": 76.5
+    "t_fuel": 0.035
+    "fuel_con": 2
+    "tyre_degrad_coeff_soft": 0.5
+    "tyre_degrad_coeff_medium": 0.25
+    "tyre_degrad_coeff_hard": 0.1
+    "tyre_opt_lap_soft": 10
+    "tyre_opt_lap_medium": 15
+    "tyre_opt_lap_hard": 20
+    "t_stop_0": 22.5
+    "n_lap_tot": 66
+    "n_stop": 2
+    "n_iter": 1600
+}
