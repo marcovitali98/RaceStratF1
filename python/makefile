@@ -12,11 +12,11 @@ all: setup
 # Setup the Python virtual environment and install dependencies
 setup: $(VENV)/bin/activate
 
-$(VENV)/bin/activate: src/requirements.txt
+$(VENV)/bin/activate: requirements.txt
 	@echo "Checking and setting up virtual environment..."
 	@$(PYTHON) -m venv $(VENV) 2>/dev/null || (echo "Failed to create venv, attempting to install python3-venv package..."; sudo apt-get install $(PYTHON)-venv)
 	@echo "Virtual environment created successfully."
-	@$(VENV)/bin/pip install -r src/requirements.txt
+	@$(VENV)/bin/pip install -r requirements.txt
 	@touch $(VENV)/bin/activate
 	@echo "Setup complete. Virtual environment is ready."
 
