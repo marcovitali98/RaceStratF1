@@ -9,7 +9,7 @@ int main (int argc, char* argv[]){
     if (check_open == 1){
         return 1;
     }
-
+ 
     std::cout<< "\nTotal laps: "<< n_lap_tot << "\nNumber of stops: " << n_stop << "\nAverage pit stop time: " << t_stop[0] << "\nAverage time loss per kg of fuel: " << t_fuel << " s" << std::endl;
 
     if (n_stop==2){
