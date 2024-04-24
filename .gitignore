@@ -1,4 +1,77 @@
+# 
+
 .vscode
 data.txt
 
+# pycache all folders
+__pycache__
+
+# Python-specific ignores
+/python/__pycache__/
+/python/*.py[cod]
+/python/*$py.class
+/python/.ipynb_checkpoints/
+/python/.pytest_cache/
+/python/*.egg-info/
+/python/dist/
+/python/build/
+/python/venv/
+/python/*.pyc
+
+# Jupyter Notebook
+/python/.ipynb_checkpoints/
+
+# Virtualenv
+/python/venv/
+/python/*.venv
+/python/ENV/
+
+# PyCharm
+/python/.idea/
+
+# C-specific ignores
+/c/*.o
+/c/*.out
+/c/*.exe
+/c/*.dll
+/c/*.so
+/c/*.i
+/c/*.ii
+/c/*.s
+/c/*.su
+/c/*.d
+/c/*.dylib
+/c/*.pid
+/c/*.pidb
+/c/*.stackdump
+/c/build/
+/c/bin/
+/c/obj/
+/c/*.log
+/c/*.csv
+/c/*.dat
+/c/*.tlog
+/c/*.lo
+/c/*.la
+/c/*.loT
+/c/.libs/
+
+# Dependency directories
+/c/dependencies/
+
+# Compiled Static libraries
+/c/lib*.a
+/c/lib*.la
+
+# Compiled Dynamic libraries
+/c/lib*.so
+/c/lib*.so.*
+/c/lib*.dylib
+
+# Backup & other files to ignore
+*~
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
 
