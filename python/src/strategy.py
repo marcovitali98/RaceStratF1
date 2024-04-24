@@ -7,7 +7,6 @@ class Strategy:
         self.circuit_name = circuit_name
 
     def set_params(self, params):
-        # Simulated parameter loading, which could be adapted to load from a file as in C
         self.n_lap_tot = params["n_lap_tot"]
         self.n_stop = params["n_stop"]
         self.n_iter = params["n_iter"]
@@ -45,10 +44,10 @@ class Strategy:
         return stint_time
 
     def adjust_stints(self, iter_num):
-        increment = iter_num // 100  # Example adjustment logic
+        # Adjusting stints based on the iteration number
         if self.n_stop == 2:
-            self.stint_lap[0] = 5 + increment
-            self.stint_lap[1] = 5 + (iter_num % (self.n_lap_tot - (self.stint_lap[0] + 5)))
+            self.stint_lap[0] = 5 + iter_num // (self.n_iter // 10)  # Incrementing every 10% of iterations
+            self.stint_lap[1] = 5 + iter_num % (self.n_iter // 10)
             self.stint_lap[2] = self.n_lap_tot - self.stint_lap[0] - self.stint_lap[1]
 
     def execute_strategy(self):
@@ -57,11 +56,17 @@ class Strategy:
         for iter_num in range(self.n_iter):
             self.adjust_stints(iter_num)
             stint_times = self.calculate_stint_times()
+            logger.info(f"Iteration {iter_num + 1}:")
+            for stint in range(self.n_stop + 1):
+                logger.info(f"  Stint {stint + 1}:")
+                for tyre_type, tyre_name in enumerate(["Soft", "Medium", "Hard"]):
+                    logger.info(f"    {tyre_name}: {stint_times[stint][tyre_type]:.2f} seconds")
+
             for config in range(27):  # 3^3 combinations
                 total_time = sum(stint_times[stint][config // 3**stint % 3] for stint in range(self.n_stop + 1))
                 total_time += self.stop_0_time * self.n_stop + self.fuel_time * ((self.n_lap_tot * self.fuel_con) / 2 + 1)
                 if total_time < best_time:
                     best_time = total_time
                     best_configuration = [(config // 3**stint % 3) for stint in range(self.n_stop + 1)]
-            logger.info(f"Iteration {iter_num+1}: Best Time {best_time} with Configuration {best_configuration}")
+            logger.info(f"Best Configuration for Iteration {iter_num + 1}: {best_configuration}, Time: {best_time:.2f} seconds")
         return best_time, best_configuration
