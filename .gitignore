@@ -6,6 +6,8 @@ data.txt
 # pycache all folders
 __pycache__
 
+/python/logs
+
 # Python-specific ignores
 /python/__pycache__/
 /python/*.py[cod]

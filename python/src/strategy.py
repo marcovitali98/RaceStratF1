@@ -56,11 +56,11 @@ class Strategy:
         for iter_num in range(self.n_iter):
             self.adjust_stints(iter_num)
             stint_times = self.calculate_stint_times()
-            logger.info(f"Iteration {iter_num + 1}:")
+            logger.debug(f"Iteration {iter_num + 1}:")
             for stint in range(self.n_stop + 1):
-                logger.info(f"  Stint {stint + 1}:")
+                logger.debug(f"  Stint {stint + 1}:")
                 for tyre_type, tyre_name in enumerate(["Soft", "Medium", "Hard"]):
-                    logger.info(f"    {tyre_name}: {stint_times[stint][tyre_type]:.2f} seconds")
+                    logger.debug(f"    {tyre_name}: {stint_times[stint][tyre_type]:.2f} seconds")
 
             for config in range(27):  # 3^3 combinations
                 total_time = sum(stint_times[stint][config // 3**stint % 3] for stint in range(self.n_stop + 1))
