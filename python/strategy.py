@@ -1,7 +1,7 @@
+from loguru import logger
+
 
 ARRAY_SIZE = 2000
-
-TIRES = ["soft", "medium", "hard"]
 
 
 class Strategy:
@@ -12,87 +12,95 @@ class Strategy:
         self.n_lap_tot = params["n_lap_tot"]
         self.n_stop = params["n_stop"]
         self.n_iter = params["n_iter"]
-        self.t_fuel = params["t_fuel"]
+        self.fuel_time = params["t_fuel"]
         self.fuel_con = params["fuel_con"]
-        self.t_stop_0 = params["t_stop_0"]
-        self.lap_best_soft = params["lap_best_soft"]
-        self.lap_best_medium = params["lap_best_medium"]
-        self.lap_best_hard = params["lap_best_hard"]
-        self.tyre_opt_lap_soft = params["tyre_opt_lap_soft"]
-        self.tyre_opt_lap_medium = params["tyre_opt_lap_medium"]
-        self.tyre_opt_lap_hard = params["tyre_opt_lap_hard"]
-        self.tyre_degrad_coeff_soft = params["tyre_degrad_coeff_soft"]
-        self.tyre_degrad_coeff_medium = params["tyre_degrad_coeff_medium"]
-        self.tyre_degrad_coeff_hard = params["tyre_degrad_coeff_hard"]
+        self.stop_0_time = params["t_stop_0"]
+        self.tyre_lap_best_time = [
+            params["lap_best_soft"],
+            params["lap_best_medium"],
+            params["lap_best_hard"]
+        ]
+        self.tyre_optimal_lap = [
+            params["tyre_opt_lap_soft"],
+            params["tyre_opt_lap_medium"],
+            params["tyre_opt_lap_hard"],
+        ]
+        self.tyre_degrad_coeff = [
+            params["tyre_degrad_coeff_soft"],
+            params["tyre_degrad_coeff_medium"],
+            params["tyre_degrad_coeff_hard"]
+        ]
 
-    
-    def degradation_calculator(self,laps: int, degrad_coef: float):
+    def degradation_calculator(self, laps: int, degrad_coef: float) -> float:
         result = 0
         for i in range(1, laps + 1):
             result += i * degrad_coef
         return result
 
-
     def two_stop_strategy(self):
-        t_weight_fuel = self.t_fuel * ((self.n_lap_tot * self.fuel_con) / 2 + 1)
-    
+        # initialize variables
+        time_weight_fuel = self.fuel_time * ((self.n_lap_tot * self.fuel_con) / 2 + 1)    
+        stint_time = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        total_time = [[[[0.0 for _ in range(3)] for _ in range(3)] for _ in range(3)] for _ in range(ARRAY_SIZE)]
+        best_time = [0.0] * ARRAY_SIZE
+        best_combo = [0] * ARRAY_SIZE
+        stint_lap = [0.0, 0.0, 0.0]
+
+        if self.n_stop == 0:
+            stint_lap[0] = self.n_lap_tot
+        elif self.n_stop == 1:
+            stint_lap[0] = 5
+            stint_lap[1] = self.n_lap_tot - 5
+        elif self.n_stop == 2:
+            stint_lap[0] = 5
+            stint_lap[1] = 5
+            stint_lap[2] = self.n_lap_tot - 10
+
         for iter in range(self.n_iter):
-            t_stint = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-            t_tot = [[[[0.0 for _ in range(3)] for _ in range(3)] for _ in range(3)] for _ in range(ARRAY_SIZE)]
-            t_best = [0.0] * ARRAY_SIZE
-            best_combo = [0] * ARRAY_SIZE
-            stint_len = [0.0, 0.0, 0.0]
 
-            if iter == 0:
-                if self.n_stop == 0:
-                    stint_len[0] = self.n_lap_tot
-                elif self.n_stop == 1:
-                    stint_len[0] = 5
-                    stint_len[1] = self.n_lap_tot - 5
-                elif self.n_stop == 2:
-                    stint_len[0] = 5
-                    stint_len[1] = 5
-                    stint_len[2] = self.n_lap_tot - 10
-
+            # Calculate stint time
             for stint in range(self.n_stop + 1):
-                for tyre in range(3):
-                    if stint_len[stint] > param[f"tyre_opt_lap_{TIRES[tyre]}"]:
-                        t_tyre_degrad = self.degradation_calculator(stint_len[stint] - param[f"tyre_opt_lap_{TIRES[tyre]}"],
-                                                    param[f"tyre_degrad_coeff_{TIRES[tyre]}"])
+                for tyre_type in range(3):
+                    tyre_opt = self.tyre_optimal_lap[tyre_type]
+                    tyre_deg = self.tyre_degrad_coeff[tyre_type]
+                    tyre_time = self.tyre_lap_best_time[tyre_type]
+                    if stint_lap[stint] > tyre_opt:
+                        t_tyre_degrad = self.degradation_calculator(
+                            laps=stint_lap[stint] - tyre_opt, 
+                            degrad_coef=tyre_deg)
                     else:
                         t_tyre_degrad = 0
-                    t_stint[stint][tyre] = stint_len[stint] * param[f"lap_best_{TIRES[tyre]}"] + t_tyre_degrad
+                    stint_time[stint][tyre_type] = stint_lap[stint] * tyre_time + t_tyre_degrad
 
+            # Calculate total time ì
             for i in range(pow(3, self.n_stop + 1)):
-                # Calculate total time for each tire combination
-                for j in range(self.n_stop):
-                    t_tot[iter][(i // 9)][(i // 3) % 3][i % 3] += self.t_stop_0
-                t_tot[iter][(i // 9)][(i // 3) % 3][i % 3] += t_weight_fuel
+                total_time[iter][(i // 9)][(i // 3) % 3][i %3] = stint_time[0][i // 9] + stint_time[1][(i//3)%3] + stint_time[2][i%3]
+                for _ in range(1, 2):
+                    total_time[iter][(i // 9)][(i // 3) % 3][i % 3] += self.stop_0_time
+                total_time[iter][(i // 9)][(i // 3) % 3][i % 3] += time_weight_fuel
 
+            # Find best combination
             for i in range(pow(3, self.n_stop + 1)):
                 if i == 0:
-                    t_best[iter] = t_tot[iter][0][0][0]
+                    best_time[iter] = total_time[iter][0][0][0]
                     best_combo[iter] = 0
                 else:
-                    if t_tot[iter][(i // 9)][(i // 3) % 3][i % 3] < t_best[iter]:
-                        t_best[iter] = t_tot[iter][(i // 9)][(i // 3) % 3][i % 3]
+                    if total_time[iter][(i // 9)][(i // 3) % 3][i % 3] < best_time[iter]:
+                        best_time[iter] = total_time[iter][(i // 9)][(i // 3) % 3][i % 3]
                         best_combo[iter] = i
 
+    # to check for in all iterations if the best combination is the best in all iterations so far
+    # to found code in 238-281 on C code
 
-
-
-
-
+        def logger_output():
             # Write to file
-            """
-            filePtr.write(f"\n---------------ITER {iter}---------------\n")
+            logger.info(f"---------------ITER {iter}---------------")
             for i in range(self.n_stop + 1):
-                filePtr.write(f"\nSTINT {i + 1}\n")
+                logger.info(f"STINT {i + 1} : {stint_lap[i]} laps")
                 for j in range(3):
-                    filePtr.write(f"{t_stint[i][j]} s | ")
+                    logger.info(f"{stint_time[i][j]} s | ")
                 if i != self.n_stop:
-                    filePtr.write(f"\nSTOP {i + 1}: {self.t_stop_0} s\n")
+                    logger.info(f"STOP {i + 1}: {self.stop_0_time} s")
 
             # Print best combination
-            filePtr.write(f"\nBEST COMBINATION: {best_combo[iter]}")
-             """
+            logger.info(f"BEST COMBINATION: {best_combo[iter]}")
