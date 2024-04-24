@@ -9,21 +9,26 @@ PYTHON = python3
 # Default command
 all: setup
 
-# Setup the Python virtual environment and install dependencies
+# Setup and install the Python virtual environment and install dependencies
 setup: $(VENV)/bin/activate
-
-$(VENV)/bin/activate: requirements.txt
-	@echo "Checking and setting up virtual environment..."
-	@$(PYTHON) -m venv $(VENV) 2>/dev/null || (echo "Failed to create venv, attempting to install python3-venv package..."; sudo apt-get install $(PYTHON)-venv)
-	@echo "Virtual environment created successfully."
+	@echo "Setting up the project..."
 	@$(VENV)/bin/pip install -r requirements.txt
-	@touch $(VENV)/bin/activate
-	@echo "Setup complete. Virtual environment is ready."
+	@echo "Setup complete."
 
 # Command to run the application
 run: setup
 	@echo "Running the application..."
 	@$(VENV)/bin/python src/main.py
+
+activate:
+	@echo "Activating virtual environment..."
+	@bash -c "source .venv/bin/activate"
+
+# linter with flake8
+lint:
+	@echo "Running linter..."
+	@bash -c "source .venv/bin/activate && flake8 src/"
+	@echo "Linter complete."
 
 # Clean the project
 clean:
@@ -33,4 +38,4 @@ clean:
 	@find src/ -type d -name '__pycache__' -delete
 	@echo "Clean up complete."
 
-.PHONY: all setup run clean
+.PHONY: all setup run activate lint clean

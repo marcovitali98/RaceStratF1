@@ -1,9 +1,8 @@
 import json
-# File path to your JSON data
-file_path = '../circuit.json'
-
 
 from loguru import logger
+# File path to your JSON data
+file_path = '../circuit.json'
 
 
 class CircuitInfo():
@@ -15,7 +14,6 @@ class CircuitInfo():
         self.circuit_info = None
         self.get_file()
     
-
     def get_file(self):
         try:
             with open(self.file_path, 'r') as file:
@@ -27,14 +25,11 @@ class CircuitInfo():
         except Exception as e:
             return logger.exception(e)
         
-    
-    def get_circuit_info(self):
-        return self.circuit_info
-    
     def get_available_circuits(self):
         try:
             # retrunt the available circuits, field circuit_name
-            circuits = list(self.data.circuits["circuit_name"])
+            circuits = self.data.keys()
+            print(circuits)
             return circuits
         except Exception as e:
             return logger.exception(e)
