@@ -6,7 +6,6 @@ file_path = '../circuit.json'
 from loguru import logger
 
 
-
 class CircuitInfo():
 
     def __init__(self, file_path: str, logger: logger):

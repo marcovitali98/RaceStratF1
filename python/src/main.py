@@ -1,6 +1,6 @@
+from circuit_info import CircuitInfo
 import strategy
 
-from python.src.circuit_info import CircuitInfo
 
 from loguru import logger
 
