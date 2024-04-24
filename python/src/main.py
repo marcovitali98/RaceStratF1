@@ -32,9 +32,9 @@ def execute_strategy(param):
     strategy = Strategy(param["circuit_name"])
     strategy.set_params(param)
     if param["n_stop"] == 1:
-        strategy.one_stop_strategy(param)
+        strategy.execute_strategy(param)
     elif param["n_stop"] == 2:
-        strategy.two_stop_strategy()
+        strategy.execute_strategy()
     else:
         logger.warning(f"No strategy available for {param['n_stop']} stops.")
 
