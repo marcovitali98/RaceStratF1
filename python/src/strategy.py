@@ -2,6 +2,8 @@
 
 from loguru import logger
 
+from utils import degradation_calculator
+
 
 ARRAY_SIZE = 2000
 
@@ -33,11 +35,6 @@ class Strategy:
             params["tyre_degrad_coeff_hard"]
         ]
 
-    def degradation_calculator(self, laps: int, degrad_coef: float) -> float:
-        result = 0
-        for i in range(1, laps + 1):
-            result += i * degrad_coef
-        return result
 
     def two_stop_strategy(self):
         # initialize variables
@@ -67,7 +64,7 @@ class Strategy:
                     tyre_deg = self.tyre_degrad_coeff[tyre_type]
                     tyre_time = self.tyre_lap_best_time[tyre_type]
                     if stint_lap[stint] > tyre_opt:
-                        t_tyre_degrad = self.degradation_calculator(
+                        t_tyre_degrad = degradation_calculator(
                             laps=stint_lap[stint] - tyre_opt, 
                             degrad_coef=tyre_deg)
                     else:
