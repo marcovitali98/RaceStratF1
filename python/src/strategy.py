@@ -1,3 +1,5 @@
+"""Strategy module for the F1 Strategy Simulator."""
+
 from loguru import logger
 
 

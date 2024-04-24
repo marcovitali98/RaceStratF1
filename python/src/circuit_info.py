@@ -1,3 +1,5 @@
+"""Circular Info class to get the circuit information from the JSON file"""
+
 import json
 
 from loguru import logger
@@ -12,9 +14,9 @@ class CircuitInfo():
         self.file_path = file_path
         self.logger = logger
         self.circuit_info = None
-        self.get_file()
+        self.get_json_file()
     
-    def get_file(self):
+    def get_json_file(self):
         try:
             with open(self.file_path, 'r') as file:
                 self.data = json.load(file)
@@ -32,7 +34,6 @@ class CircuitInfo():
             return circuits
         except Exception as e:
             return logger.exception(e)
-
 
     def get_circuit_info(self, circuit_name):
         try:
