@@ -18,6 +18,10 @@ Go to path '/python' to run the following commands.
 
 ### Commands
 
+- **Install**: Install the required packages from `requirements.txt` using `pip`.
+
+        make install
+
 - **Setup**: Create the virtual environment, activate it, and install dependencies from `requirements.txt`.
 
         make setup
