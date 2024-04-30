@@ -9,6 +9,11 @@ PYTHON = python3
 # Default command
 all: setup
 
+install:
+	@echo "Installing dependencies..."
+	@$(PYTHON) -m venv $(VENV)
+	@echo "Dependencies installed."
+
 # Setup and install the Python virtual environment and install dependencies
 setup: $(VENV)/bin/activate
 	@echo "Setting up the project..."
